@@ -1,1 +1,293 @@
-{"clave": "valor", "numero": 123}
+{
+  "taxonomias": {
+    "estructural": {
+      "clasificacion": [
+        {
+          "tipo_clasificación": "Numérico discreto",
+          "ejemplos": ["CodigoEstacion", "CodigoMunicipio", "CodigoDepartamento", "AÑO"]
+        },
+        {
+          "tipo": "Numérico continuo",
+          "ejemplos": [
+            "ValorObservado (Humedad %)",
+            "ValorObservado (Precipitación mm)",
+            "Área Sembrada (ha)",
+            "Área Cosechada (ha)",
+            "Producción (t)",
+            "Rendimiento (t/ha)"
+          ]
+        },
+        {
+          "tipo": "Categórico nominal",
+          "ejemplos": ["DEPARTAMENTO", "MUNICIPIO", "CULTIVO", "NombreEstacion", "ZonaHidrografica"]
+        },
+        {
+          "tipo": "Categórico ordinal",
+          "ejemplos": ["PERIODO (A/B)", "Ciclo de Cultivo (corto, mediano, largo)"]
+        },
+        {
+          "tipo": "Temporal",
+          "ejemplos": ["FechaObservacion", "AÑO"]
+        },
+        {
+          "tipo": "Geoespacial",
+          "ejemplos": ["Latitud", "Longitud"]
+        },
+        {
+          "tipo": "Texto libre",
+          "ejemplos": ["DescripcionSensor", "Nombre Científico"]
+        }
+      ]
+    },
+
+    "funcional": {
+      "pregunta": "¿Qué papel tiene el dato?",
+      "clasificacion": [
+        {
+          "tipo": "Maestro",
+          "descripcion": "Entidades principales (clases del modelo).",
+          "ejemplos": ["Municipio", "Departamento", "EstaciónMeteorológica", "Cultivo"]
+        },
+        {
+          "tipo": "Transaccional",
+          "descripcion": "Eventos registrados en el tiempo.",
+          "ejemplos": ["Medición de humedad", "Medición de precipitación", "Evaluación agropecuaria anual"]
+        },
+        {
+          "tipo": "Derivado",
+          "descripcion": "Se calculan a partir de otros datos.",
+          "ejemplos": ["Rendimiento = Producción / Área Cosechada"]
+        },
+        {
+          "tipo": "Analítico",
+          "descripcion": "Datos clave para toma de decisiones.",
+          "ejemplos": ["Promedio anual de humedad por municipio", "Total de precipitación por departamento", "Producción total por cultivo"]
+        }
+      ]
+    },
+
+    "criticidad": {
+      "pregunta": "¿Qué tan sensible es el dato?",
+      "clasificacion": [
+        {
+          "tipo": "Pública",
+          "ejemplos": [
+            "Todas las columnas del EVA",
+            "Todas las columnas de Humedad del Aire",
+            "Todas las columnas de Precipitación"
+          ],
+          "justificacion": "Son datasets abiertos publicados en datos.gov.co por MinAgricultura e IDEAM."
+        }
+      ]
+    },
+
+    "maestros": [
+      {
+        "maestro": "Municipio",
+        "columnas": ["CodigoMunicipio", "NombreMunicipio", "CodigoDepartamento", "NombreDepartamento"],
+        "tipo_de_dato": "ID / Texto",
+        "clasificacion": "Público"
+      },
+      {
+        "maestro": "EstaciónMeteorológica",
+        "columnas": ["CodigoEstacion", "NombreEstacion", "Latitud", "Longitud", "ZonaHidrografica", "CodigoMunicipio (FK)"],
+        "tipo_de_dato": "ID / Texto / Numérico decimal",
+        "clasificacion": "Público"
+      },
+      {
+        "maestro": "MediciónHumedad",
+        "columnas": ["CodigoEstacion (FK)", "FechaObservacion", "ValorObservado", "UnidadMedida", "DescripcionSensor"],
+        "tipo_de_dato": "ID / Fecha / Numérico continuo / Texto",
+        "clasificacion": "Público"
+      },
+      {
+        "maestro": "MediciónPrecipitación",
+        "columnas": ["CodigoEstacion (FK)", "FechaObservacion", "ValorObservado", "UnidadMedida", "DescripcionSensor"],
+        "tipo_de_dato": "ID / Fecha / Numérico continuo / Texto",
+        "clasificacion": "Público"
+      },
+      {
+        "maestro": "EvaluaciónAgropecuaria",
+        "columnas": ["CodigoMunicipio (FK)", "AÑO", "PERIODO", "GRUPO DE CULTIVO", "CULTIVO", "Área Sembrada (ha)", "Área Cosechada (ha)", "Producción (t)", "Rendimiento (t/ha)"],
+        "tipo_de_dato": "ID / Numérico / Texto",
+        "clasificacion": "Público"
+      },
+      {
+        "maestro": "Cultivo",
+        "columnas": ["CULTIVO", "GRUPO DE CULTIVO", "SUBGRUPO DE CULTIVO", "Nombre Científico", "Ciclo de Cultivo"],
+        "tipo_de_dato": "Texto / Categórico",
+        "clasificacion": "Público"
+      }
+    ]
+  },
+
+  "metadatos": {
+    "descripcion": "Los metadatos responden: ¿qué significa el dato?, ¿cómo se creó?, ¿cuándo?, ¿quién?, ¿en qué formato? y ¿cómo se interpreta?",
+
+    "estructurales": [
+      {
+        "id": 1,
+        "tipo": "Estructural",
+        "nombre": "Evaluaciones_Agropecuarias_Municipales_EVA_20260122.csv",
+        "significado": "Registro anual de siembra, cosecha, producción y rendimiento de los cultivos en cada municipio de Colombia.",
+        "que_contiene": "Departamento, Municipio, Grupo de cultivo, Cultivo, Año, Periodo, Área Sembrada (ha), Área Cosechada (ha), Producción (t), Rendimiento (t/ha).",
+        "llave_conexion": "CodigoMunicipio",
+        "fecha_corte": "2026-01-22",
+        "tipo_archivo": "CSV",
+        "origen": "Ministerio de Agricultura y Desarrollo Rural – UPRA / Agronet (datos.gov.co)."
+      },
+      {
+        "id": 2,
+        "tipo": "Estructural",
+        "nombre": "Humedad_del_Aire_20260122.csv",
+        "significado": "Observaciones de humedad relativa del aire registradas por las estaciones meteorológicas del IDEAM.",
+        "que_contiene": "CodigoEstacion, NombreEstacion, Departamento, Municipio, Latitud, Longitud, FechaObservacion, ValorObservado, UnidadMedida, DescripcionSensor.",
+        "llave_conexion": "CodigoEstacion (FK hacia EstaciónMeteorológica) + CodigoMunicipio",
+        "fecha_corte": "2026-01-22",
+        "tipo_archivo": "CSV",
+        "origen": "IDEAM – Instituto de Hidrología, Meteorología y Estudios Ambientales (datos.gov.co)."
+      },
+      {
+        "id": 3,
+        "tipo": "Estructural",
+        "nombre": "Precipitación_20260122.csv",
+        "significado": "Observaciones de precipitación (mm de lluvia) registradas por las estaciones meteorológicas del IDEAM.",
+        "que_contiene": "CodigoEstacion, NombreEstacion, Departamento, Municipio, Latitud, Longitud, FechaObservacion, ValorObservado, UnidadMedida, DescripcionSensor.",
+        "llave_conexion": "CodigoEstacion (FK hacia EstaciónMeteorológica) + CodigoMunicipio",
+        "fecha_corte": "2026-01-22",
+        "tipo_archivo": "CSV",
+        "origen": "IDEAM – Instituto de Hidrología, Meteorología y Estudios Ambientales (datos.gov.co)."
+      }
+    ],
+
+    "descriptivos": [
+      {
+        "id": 4,
+        "tipo": "Descriptivo",
+        "columna": "ValorObservado (Humedad del Aire)",
+        "significado": "Porcentaje de humedad relativa del aire medido por la estación en una fecha dada.",
+        "como_se_crea": "Lo registra automáticamente el sensor de humedad de la estación del IDEAM.",
+        "formato": "Numérico decimal (float).",
+        "interpretacion": "Rango válido 0 % a 100 %. Valores cercanos a 100 % = aire saturado; cercanos a 0 % = aire muy seco."
+      },
+      {
+        "id": 5,
+        "tipo": "Descriptivo",
+        "columna": "ValorObservado (Precipitación)",
+        "significado": "Cantidad de lluvia acumulada (en milímetros) durante el periodo de observación.",
+        "como_se_crea": "Se captura mediante pluviómetro ubicado en la estación del IDEAM.",
+        "formato": "Numérico decimal (float).",
+        "interpretacion": "0 mm = sin lluvia. Valores superiores a 50 mm en un día suelen considerarse precipitación fuerte."
+      },
+      {
+        "id": 6,
+        "tipo": "Descriptivo",
+        "columna": "Producción (t)",
+        "significado": "Toneladas de producto cosechado del cultivo en el municipio durante el año y periodo reportado.",
+        "como_se_crea": "La reportan las Secretarías de Agricultura municipales a la UPRA mediante las EVA.",
+        "formato": "Numérico decimal (float).",
+        "interpretacion": "Valor ≥ 0. Si Área Cosechada = 0, Producción debe ser 0. Valores atípicos muy altos deben revisarse en el ETL."
+      }
+    ],
+
+    "administrativo": {
+      "id": 7,
+      "tipo": "Administrativo",
+      "permisos": "Datos públicos (Ley 1712 de 2014 de Transparencia en Colombia).",
+      "licencia": "Licencia Creative Commons CC BY 4.0 – libre para uso académico e investigativo citando la fuente.",
+      "actualizacion": "EVA se actualiza anualmente; Humedad y Precipitación se actualizan mensualmente.",
+      "responsables": [
+        "Ministerio de Agricultura y Desarrollo Rural – UPRA (EVA)",
+        "IDEAM (Humedad y Precipitación)"
+      ],
+      "etl_aplicado": "Se eliminaron filas con nulos en CodigoMunicipio o FechaObservacion, se homologaron nombres de municipios con DIVIPOLA-DANE y se descartaron outliers (humedad fuera de 0–100 %, precipitación negativa)."
+    }
+  },
+
+  "ontologia_manchester": {
+    "descripcion": "Ontología en Manchester Syntax que relaciona las 3 bases (EVA, Humedad y Precipitación) a través del Municipio y la EstaciónMeteorológica. Resuelve la desconexión semántica: sin ontología no está claro si una medición puede existir sin estación, o si una evaluación agropecuaria puede existir sin municipio.",
+    "codigo": [
+      "Ontology: <http://example.org/climaAgro>",
+      "",
+      "Class: Departamento",
+      "Class: Municipio",
+      "Class: EstacionMeteorologica",
+      "Class: Medicion",
+      "Class: MedicionHumedad",
+      "Class: MedicionPrecipitacion",
+      "Class: EvaluacionAgropecuaria",
+      "Class: Cultivo",
+      "",
+      "ObjectProperty: perteneceA",
+      "ObjectProperty: ubicadaEn",
+      "ObjectProperty: generaMedicion",
+      "ObjectProperty: registradaEn",
+      "ObjectProperty: evalua",
+      "",
+      "DataProperty: tieneCodigoMunicipio",
+      "DataProperty: tieneNombre",
+      "DataProperty: tieneLatitud",
+      "DataProperty: tieneLongitud",
+      "DataProperty: tieneFechaObservacion",
+      "DataProperty: tieneValorHumedad",
+      "DataProperty: tieneValorPrecipitacion",
+      "DataProperty: tieneAnio",
+      "DataProperty: tieneProduccion",
+      "DataProperty: tieneAreaSembrada",
+      "",
+      "Class: MedicionHumedad",
+      "    SubClassOf: Medicion",
+      "",
+      "Class: MedicionPrecipitacion",
+      "    SubClassOf: Medicion",
+      "",
+      "Class: Municipio",
+      "    SubClassOf:",
+      "        tieneCodigoMunicipio exactly 1 string,",
+      "        tieneNombre exactly 1 string,",
+      "        perteneceA exactly 1 Departamento",
+      "",
+      "Class: EstacionMeteorologica",
+      "    SubClassOf:",
+      "        tieneNombre exactly 1 string,",
+      "        tieneLatitud exactly 1 float,",
+      "        tieneLongitud exactly 1 float,",
+      "        ubicadaEn exactly 1 Municipio",
+      "",
+      "Class: Medicion",
+      "    SubClassOf:",
+      "        tieneFechaObservacion exactly 1 dateTime,",
+      "        generaMedicion exactly 1 EstacionMeteorologica",
+      "",
+      "Class: EvaluacionAgropecuaria",
+      "    SubClassOf:",
+      "        tieneAnio exactly 1 integer,",
+      "        tieneProduccion some float,",
+      "        registradaEn exactly 1 Municipio,",
+      "        evalua exactly 1 Cultivo",
+      "",
+      "Class: MunicipioHumedo",
+      "    EquivalentTo:",
+      "        Municipio and (ubicadaEn some (EstacionMeteorologica and (generaMedicion some (MedicionHumedad and (tieneValorHumedad some float[>= 80])))))",
+      "",
+      "Class: MunicipioLluvioso",
+      "    EquivalentTo:",
+      "        Municipio and (ubicadaEn some (EstacionMeteorologica and (generaMedicion some (MedicionPrecipitacion and (tieneValorPrecipitacion some float[>= 50])))))",
+      "",
+      "Class: CultivoProductivo",
+      "    EquivalentTo:",
+      "        Cultivo and (evalua some (EvaluacionAgropecuaria and (tieneProduccion some float[>= 1000])))"
+    ],
+    "reglas_legibles": [
+      "Un Municipio pertenece exactamente a 1 Departamento.",
+      "Una EstaciónMeteorológica está ubicada exactamente en 1 Municipio.",
+      "Una Medición (humedad o precipitación) es generada por exactamente 1 EstaciónMeteorológica.",
+      "Una EvaluaciónAgropecuaria se registra en exactamente 1 Municipio y evalúa exactamente 1 Cultivo.",
+      "Un MunicipioHúmedo es un Municipio cuyas estaciones reportan humedad ≥ 80 %.",
+      "Un MunicipioLluvioso es un Municipio cuyas estaciones reportan precipitación ≥ 50 mm.",
+      "Un CultivoProductivo es un Cultivo con producción ≥ 1000 toneladas en alguna evaluación."
+    ]
+  },
+
+  "resumen": "Taxonomía clasifica, Metadato describe, Ontología relaciona."
+}
